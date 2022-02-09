@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import makeRoute from './utis/makeRoute';
+import GetDevicesListController from './controllers/GetDevicesList';
 // import routes here
 
 export default class DevicesApp {
@@ -20,6 +22,7 @@ export default class DevicesApp {
   private loadRoutes(): void {
     // load routes here
     this.app.get('/test', (req, res) => { res.send('Server works') })
+    this.app.get('/devices', makeRoute(new GetDevicesListController()))
   }
 
   public listen(port: number | string) {
