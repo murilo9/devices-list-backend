@@ -3,6 +3,8 @@ import cors from 'cors';
 import makeRoute from './utils/makeRoute';
 import GetDevicesListController from './controllers/GetDevicesList';
 import SignUpController from './controllers/SignUp';
+import SignInController from './controllers/SignIn';
+import validateSignInForm from './validators/validateSignInForm';
 // import routes here
 
 export default class DevicesApp {
@@ -25,6 +27,7 @@ export default class DevicesApp {
     this.app.get('/test', (req, res) => { res.send('Server works') })
     this.app.get('/devices', makeRoute(new GetDevicesListController()))
     this.app.post('/signup', makeRoute(new SignUpController()))
+    this.app.post('/signin', makeRoute(new SignInController(validateSignInForm)))
   }
 
   public listen(port: number | string) {

@@ -15,6 +15,7 @@ export default function makeRoute(controller:
       if ('authorizator' in controller) {
         const authorization = await controller.authorizator(request);
         if (authorization.failed) {
+          console.log(authorization)
           response.status(authorization.statusCode).send(authorization.payload);
           return;
         }
@@ -23,6 +24,7 @@ export default function makeRoute(controller:
       if ('validator' in controller) {
         const validation = await controller.validator(request);
         if (validation.failed) {
+          console.log(validation)
           response.status(validation.statusCode).send(validation.payload);
           return;
         }

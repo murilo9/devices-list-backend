@@ -1,4 +1,4 @@
-import getUserNameFromDb from "../db/getUserNameFromDb";
+import getUserFromDb from "../db/getUserFromDb";
 import inserPasswordOnDatabase from "../db/insertPasswordOnDb";
 import insertUserOnDb from "../db/insertUserOnDb";
 import Controller from "../types/Controller";
@@ -10,7 +10,7 @@ export default class SignUpController extends Controller {
   async handle(request: CreateUserRequest): Promise<Result<string>> {
     const { username, password } = request.body
     // Verify if username is already registered
-    const verifyUsername = await getUserNameFromDb(username)
+    const verifyUsername = await getUserFromDb(username)
     if (verifyUsername.failed) {
       return verifyUsername
     }
@@ -35,7 +35,7 @@ export default class SignUpController extends Controller {
     }
     return {
       failed: false,
-      payload: 'User created successfully',
+      payload: 'User created successfully.',
       statusCode: 201
     }
   }
