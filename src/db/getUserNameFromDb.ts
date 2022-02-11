@@ -3,8 +3,14 @@ import Device from "../types/Device";
 import Result from "../types/Result";
 import getClient from "../utils/getDbClient";
 import devicesList from '../devicesList';
+import User from "../types/User";
 
-export default async function getDevicesListFromDB(): Promise<Result<Device[]>> {
+/**
+ * Verify if a username already exists (true) or not (false).
+ * @param name The username to search for.
+ * @returns 
+ */
+export default async function getUserNameFromDb(name: string): Promise<Result<boolean>> {
   const requestClientResult = await getClient();
   if (requestClientResult.failed) {
     return requestClientResult;
@@ -12,16 +18,11 @@ export default async function getDevicesListFromDB(): Promise<Result<Device[]>> 
   const client = requestClientResult.payload as MongoClient;
   const db = client.db();
   try {
-    const collection = db.collection<Device>('devices');
-    const devices = await collection.find({}).toArray() as Device[];
-    if (!devices.length) {
-      await collection.insertMany(devicesList);
-
-    }
-    const result = await collection.find({}).toArray() as Device[];
+    const collection = db.collection<User>('users');
+    const users = await collection.find({ username: name }).toArray() as User[];
     return {
       failed: false,
-      payload: result,
+      payload: users.length > 0,
       statusCode: 200
     }
   } catch (error) {

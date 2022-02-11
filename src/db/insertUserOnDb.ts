@@ -3,8 +3,10 @@ import Device from "../types/Device";
 import Result from "../types/Result";
 import getClient from "../utils/getDbClient";
 import devicesList from '../devicesList';
+import CreateUserForm from "../types/CreateUserForm";
+import User from "../types/User";
 
-export default async function getDevicesListFromDB(): Promise<Result<Device[]>> {
+export default async function insertUserOnDb(username: string): Promise<Result<User>> {
   const requestClientResult = await getClient();
   if (requestClientResult.failed) {
     return requestClientResult;
@@ -12,16 +14,17 @@ export default async function getDevicesListFromDB(): Promise<Result<Device[]>> 
   const client = requestClientResult.payload as MongoClient;
   const db = client.db();
   try {
-    const collection = db.collection<Device>('devices');
-    const devices = await collection.find({}).toArray() as Device[];
-    if (!devices.length) {
-      await collection.insertMany(devicesList);
-
+    const collection = db.collection<User>('users');
+    const userToCreate = {
+      username,
+      created: new Date(),
+      updated: new Date()
     }
-    const result = await collection.find({}).toArray() as Device[];
+    await collection.insertOne(userToCreate);
+    const user = await collection.findOne({ username })
     return {
       failed: false,
-      payload: result,
+      payload: user,
       statusCode: 200
     }
   } catch (error) {

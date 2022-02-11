@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import makeRoute from './utis/makeRoute';
+import makeRoute from './utils/makeRoute';
 import GetDevicesListController from './controllers/GetDevicesList';
+import SignUpController from './controllers/SignUp';
 // import routes here
 
 export default class DevicesApp {
@@ -23,6 +24,7 @@ export default class DevicesApp {
     // load routes here
     this.app.get('/test', (req, res) => { res.send('Server works') })
     this.app.get('/devices', makeRoute(new GetDevicesListController()))
+    this.app.post('/signup', makeRoute(new SignUpController()))
   }
 
   public listen(port: number | string) {
