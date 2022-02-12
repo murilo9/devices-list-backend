@@ -4,7 +4,8 @@ import PersistentEntity from "./PersistentEntity";
 interface Device extends PersistentEntity {
   name: string,
   type: DeviceType,
-  description: string
+  description: string,
+  price: number
 }
 
 export default Device;
