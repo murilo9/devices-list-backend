@@ -1,34 +1,25 @@
 import getUserFromDb from "../db/getUserFromDb";
 import Controller from "../types/Controller";
 import IAssertiveController from "../types/IAssertiveController";
-import Result from "../types/Result";
-import ResultAsyncFunction from "../types/ResultAsyncFunction";
 import SignInRequest from "../types/SignInRequest";
 import jwt from 'jsonwebtoken';
+import { Request } from "express";
 
 export default class SignInController extends Controller implements IAssertiveController {
-  validator: ResultAsyncFunction;
+  validator: (request: Request) => Promise<void>;
 
-  constructor(validator: ResultAsyncFunction) {
+  constructor(validator: (request: Request) => Promise<void>) {
     super();
     this.validator = validator;
   }
 
-  async handle(request: SignInRequest): Promise<Result<any>> {
+  async handle(request: SignInRequest): Promise<string> {
     const { username } = request.body;
-    const getUser = await getUserFromDb(username);
-    if (getUser.failed) {
-      return getUser;
-    }
-    const user = getUser.payload;
+    const user = await getUserFromDb(username);
     const userId = user._id;
     const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
       expiresIn: 10800, // expires in 3 hours
     });
-    return {
-      failed: false,
-      payload: token,
-      statusCode: 200,
-    }
+    return token
   }
 }

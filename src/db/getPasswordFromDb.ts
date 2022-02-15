@@ -1,29 +1,18 @@
-import { MongoClient, ObjectId } from 'mongodb';
+import UnexpectedDbError from '../types/Errors/UnexpectedDbError';
 import { Password } from '../types/Password';
-import Result from '../types/Result';
 import getClient from '../utils/getDbClient';
 
-export default async function getPasswordFromDatabase(userId: string): Promise<Result<Password | string>> {
+export default async function getPasswordFromDatabase(userId: string): Promise<Password | null> {
   const requestClientResult = await getClient();
-  if (requestClientResult.failed) {
-    return requestClientResult;
-  }
-  const client = requestClientResult.payload as MongoClient;
+  const client = requestClientResult
   const db = client.db();
   try {
-    const password = await db.collection('passwords').findOne({ userId: new ObjectId(userId) }) as unknown as Password;
-    return {
-      failed: false,
-      statusCode: password ? 200 : 400,
-      payload: password || 'Password or username is incorrect.',
-    };
+    const collection = db.collection<Password>('passwords')
+    const password = await collection.findOne({ userId });
+    return password
   } catch (error) {
     console.log(error);
-    return {
-      failed: true,
-      payload: error,
-      statusCode: 500,
-    };
+    throw new UnexpectedDbError();
   } finally {
     client.close();
   }

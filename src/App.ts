@@ -5,6 +5,7 @@ import GetDevicesListController from './controllers/GetDevicesList';
 import SignUpController from './controllers/SignUp';
 import SignInController from './controllers/SignIn';
 import validateSignInForm from './validators/validateSignInForm';
+import validateSignUpForm from './validators/validateSignUpForm';
 // import routes here
 
 export default class DevicesApp {
@@ -26,7 +27,7 @@ export default class DevicesApp {
     // load routes here
     this.app.get('/test', (req, res) => { res.send('Server works') })
     this.app.get('/devices', makeRoute(new GetDevicesListController()))
-    this.app.post('/signup', makeRoute(new SignUpController()))
+    this.app.post('/signup', makeRoute(new SignUpController(validateSignUpForm)))
     this.app.post('/signin', makeRoute(new SignInController(validateSignInForm)))
   }
 

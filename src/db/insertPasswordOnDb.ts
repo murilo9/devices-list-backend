@@ -1,14 +1,10 @@
-import { MongoClient } from 'mongodb';
+import UnexpectedDbError from '../types/Errors/UnexpectedDbError';
 import { Password } from '../types/Password';
-import Result from '../types/Result';
 import getClient from '../utils/getDbClient';
 
-export default async function inserPasswordOnDatabase(hash: string, userId: string): Promise<Result<Password>> {
+export default async function inserPasswordOnDatabase(hash: string, userId: string): Promise<void> {
   const requestClientResult = await getClient();
-  if (requestClientResult.failed) {
-    return requestClientResult;
-  }
-  const client = requestClientResult.payload as MongoClient;
+  const client = requestClientResult
   const db = client.db();
   try {
     const passwordToInsert = {
@@ -17,19 +13,11 @@ export default async function inserPasswordOnDatabase(hash: string, userId: stri
       hash,
       userId,
     };
-    await db.collection('passwords').insertOne(passwordToInsert);
-    return {
-      failed: false,
-      payload: passwordToInsert,
-      statusCode: 201,
-    };
+    const collection = db.collection<Password>('passwords')
+    await collection.insertOne(passwordToInsert);
   } catch (error) {
     console.log(error);
-    return {
-      failed: true,
-      payload: error,
-      statusCode: 500,
-    };
+    throw new UnexpectedDbError();
   } finally {
     client.close();
   }

@@ -1,17 +1,10 @@
-import { MongoClient, ObjectId } from "mongodb";
-import Device from "../types/Device";
-import Result from "../types/Result";
-import getClient from "../utils/getDbClient";
-import devicesList from '../devicesList';
-import CreateUserForm from "../types/CreateUserForm";
+import getClient from "../utils/getDbClient";;
 import User from "../types/User";
+import UnexpectedDbError from "../types/Errors/UnexpectedDbError";
 
-export default async function insertUserOnDb(username: string): Promise<Result<User>> {
+export default async function insertUserOnDb(username: string): Promise<User> {
   const requestClientResult = await getClient();
-  if (requestClientResult.failed) {
-    return requestClientResult;
-  }
-  const client = requestClientResult.payload as MongoClient;
+  const client = requestClientResult;
   const db = client.db();
   try {
     const collection = db.collection<User>('users');
@@ -22,18 +15,10 @@ export default async function insertUserOnDb(username: string): Promise<Result<U
     }
     await collection.insertOne(userToCreate);
     const user = await collection.findOne({ username })
-    return {
-      failed: false,
-      payload: user,
-      statusCode: 200
-    }
+    return user
   } catch (error) {
     console.log(error);
-    return {
-      failed: true,
-      payload: error,
-      statusCode: 500,
-    };
+    throw new UnexpectedDbError();
   } finally {
     client.close();
   }

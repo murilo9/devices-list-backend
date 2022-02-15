@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import Controller from '../types/Controller';
 import IAssertiveController from '../types/IAssertiveController';
 import IRestrictAccessController from '../types/IRestricAccessController';
+import getErrorStatusCode from './getErrorStatusCode';
 
 export default function makeRoute(controller:
   | Controller
@@ -10,33 +11,34 @@ export default function makeRoute(controller:
   | (Controller & IRestrictAccessController)
   | (Controller & IAssertiveController & IRestrictAccessController)) {
   return async (request: Request, response: Response) => {
+    // If the controller has an authenticator
+    if ('authorizator' in controller) {
+      try {
+        await controller.authorizator(request)
+      }
+      catch (error) {
+        response.status(getErrorStatusCode(error)).send(error.message);
+        return
+      }
+    }
+    // If the controller has a validator
+    if ('validator' in controller) {
+      try {
+        await controller.validator(request)
+      }
+      catch (error) {
+        response.status(getErrorStatusCode(error)).send(error.message);
+        return
+      }
+    }
+    // Calls the controller handler
     try {
-      // If the controller has an authenticator
-      if ('authorizator' in controller) {
-        const authorization = await controller.authorizator(request);
-        if (authorization.failed) {
-          console.log(authorization)
-          response.status(authorization.statusCode).send(authorization.payload);
-          return;
-        }
-      }
-      // If the controller has a validator
-      if ('validator' in controller) {
-        const validation = await controller.validator(request);
-        if (validation.failed) {
-          console.log(validation)
-          response.status(validation.statusCode).send(validation.payload);
-          return;
-        }
-      }
-      // Calls the controller handler
-      const handle = await controller.handle(request);
-      response.status(handle.statusCode).send(handle.payload);
-      // TODO: request and response logging
+      const flowResult = await controller.handle(request);
+      response.status(200).send(flowResult);
     } catch (error) {
-      // Catches runtime (REALLY unexpected) errors
+      // Catches REALLY unexpected errors
       console.log(error);
       response.status(500).send(error);
     }
-  };
+  }
 }

@@ -1,37 +1,25 @@
-import { MongoClient, ObjectId } from "mongodb";
 import Device from "../types/Device";
-import Result from "../types/Result";
 import getClient from "../utils/getDbClient";
 import devicesList from '../devicesList';
+import UnexpectedDbError from "../types/Errors/UnexpectedDbError";
 
-export default async function getDevicesListFromDB(): Promise<Result<Device[]>> {
+export default async function getDevicesListFromDB(): Promise<Device[]> {
   const requestClientResult = await getClient();
-  if (requestClientResult.failed) {
-    return requestClientResult;
-  }
-  const client = requestClientResult.payload as MongoClient;
+  const client = requestClientResult
   const db = client.db();
   try {
     const collection = db.collection<Device>('devices');
-    const devices = await collection.find({}).toArray() as Device[];
-    if (!devices.length) {
+    let existingDevices = await collection.find({}).toArray() as Device[];
+    if (!existingDevices.length) {
       await collection.insertMany(devicesList);
-
     }
-    const result = await collection.find({}).toArray() as Device[];
-    return {
-      failed: false,
-      payload: result,
-      statusCode: 200
-    }
+    existingDevices = await collection.find({}).toArray() as Device[];
+    return existingDevices
   } catch (error) {
     console.log(error);
-    return {
-      failed: true,
-      payload: error,
-      statusCode: 500,
-    };
-  } finally {
+    throw new UnexpectedDbError();
+  }
+  finally {
     client.close();
   }
 }
