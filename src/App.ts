@@ -6,6 +6,9 @@ import SignUpController from './controllers/SignUp';
 import SignInController from './controllers/SignIn';
 import validateSignInForm from './validators/validateSignInForm';
 import validateSignUpForm from './validators/validateSignUpForm';
+import SaveCartController from './controllers/SaveCart';
+import validateCart from './validators/validateCart';
+import userOwnsCart from './authorizators/userOwnsCart';
 // import routes here
 
 export default class DevicesApp {
@@ -29,6 +32,7 @@ export default class DevicesApp {
     this.app.get('/devices', makeRoute(new GetDevicesListController()))
     this.app.post('/signup', makeRoute(new SignUpController(validateSignUpForm)))
     this.app.post('/signin', makeRoute(new SignInController(validateSignInForm)))
+    this.app.put('/cart', makeRoute(new SaveCartController(validateCart, userOwnsCart)))
   }
 
   public listen(port: number | string) {
