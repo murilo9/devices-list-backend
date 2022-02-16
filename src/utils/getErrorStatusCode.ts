@@ -2,6 +2,7 @@ import CartNotFoundError from "../types/Errors/CartNotFoundError";
 import GetDbClientError from "../types/Errors/GetDbClientError";
 import MalformedCartError from "../types/Errors/MalformedCartError";
 import PasswordOrUsernameIncorrectError from "../types/Errors/PasswordOrUsernameIncorrectError";
+import SignUpFormIncompleteError from "../types/Errors/SignUpFormIncomplete";
 import UnauthorizedAccessError from "../types/Errors/UnauthorizedAccessError";
 import UnexpectedDbError from "../types/Errors/UnexpectedDbError";
 import UnknownError from "../types/Errors/UnknownError";
@@ -31,6 +32,12 @@ export default function getErrorStatusCode(error: Error): number {
   }
   if (error instanceof UnauthorizedAccessError) {
     return 403
+  }
+  if (error instanceof SignUpFormIncompleteError) {
+    return 400
+  }
+  if (error instanceof SignUpFormIncompleteError) {
+    return 400
   }
   return 500
 }
