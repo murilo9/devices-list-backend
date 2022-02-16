@@ -10,6 +10,7 @@ import SaveCartController from './controllers/SaveCart';
 import validateCart from './validators/validateCart';
 import userOwnsCart from './authorizators/userOwnsCart';
 import verifyJWT from './utils/verifyJWT';
+import GetUserCartController from './controllers/GetUserCart';
 // import routes here
 
 export default class DevicesApp {
@@ -33,6 +34,7 @@ export default class DevicesApp {
     this.app.get('/devices', makeRoute(new GetDevicesListController()))
     this.app.post('/signup', makeRoute(new SignUpController(validateSignUpForm)))
     this.app.post('/signin', makeRoute(new SignInController(validateSignInForm)))
+    this.app.get('/cart', verifyJWT, makeRoute(new GetUserCartController(userOwnsCart)))
     this.app.put('/cart', verifyJWT, makeRoute(new SaveCartController(validateCart, userOwnsCart)))
   }
 
