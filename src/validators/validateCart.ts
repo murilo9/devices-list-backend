@@ -12,7 +12,7 @@ export default async function validateCart(request: Request): Promise<void> {
   try {
     // For each item in the cart, verify if it actually exists
     (items as DeviceInCart[]).forEach(item => {
-      const itemExists = devicesList.find(device => device._id === item._id)
+      const itemExists = devicesList.find(device => device._id.toString() === item._id)
       if (!itemExists) {
         throw new MalformedCartError()
       }

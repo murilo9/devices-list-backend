@@ -8,7 +8,7 @@ export default async function userOwnsCart(request: Request): Promise<void> {
   const userId = request.headers['user-id'] as string
   const userCart = await getUserCartFromDB(userId)
   if (!userCart) {
-    throw new CartNotFoundError()
+    return
   }
   if (userCart.user !== userId) {
     throw new UnauthorizedAccessError()
