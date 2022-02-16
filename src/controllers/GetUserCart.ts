@@ -1,9 +1,7 @@
 import { Request } from "express"
 import getUserCartFromDB from "../db/getUserCartFromDb"
-import Cart from "../types/Cart"
 import Controller from "../types/Controller"
 import DeviceInCart from "../types/DeviceInCart"
-import CartNotFoundError from "../types/Errors/CartNotFoundError"
 import IRestrictAccessController from "../types/IRestricAccessController"
 
 export default class GetUserCartController extends Controller implements IRestrictAccessController {
@@ -20,7 +18,7 @@ export default class GetUserCartController extends Controller implements IRestri
     const userId = request.headers['user-id'] as string
     const userCart = await getUserCartFromDB(userId)
     if (!userCart) {
-      throw new CartNotFoundError()
+      return []
     }
     return userCart.items
   }

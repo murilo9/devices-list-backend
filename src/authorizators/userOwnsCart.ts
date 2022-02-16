@@ -1,7 +1,5 @@
 import { Request } from "express";
 import getUserCartFromDB from "../db/getUserCartFromDb";
-import Cart from "../types/Cart";
-import CartNotFoundError from "../types/Errors/CartNotFoundError";
 import UnauthorizedAccessError from "../types/Errors/UnauthorizedAccessError";
 
 export default async function userOwnsCart(request: Request): Promise<void> {

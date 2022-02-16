@@ -1,4 +1,3 @@
-import CartNotFoundError from "../types/Errors/CartNotFoundError";
 import GetDbClientError from "../types/Errors/GetDbClientError";
 import MalformedCartError from "../types/Errors/MalformedCartError";
 import PasswordOrUsernameIncorrectError from "../types/Errors/PasswordOrUsernameIncorrectError";
@@ -23,9 +22,6 @@ export default function getErrorStatusCode(error: Error): number {
   }
   if (error instanceof UnknownError) {
     return 500
-  }
-  if (error instanceof CartNotFoundError) {
-    return 404
   }
   if (error instanceof MalformedCartError) {
     return 400
