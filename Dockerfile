@@ -8,8 +8,6 @@ RUN npm i --silent && npm i -g typescript --silent
 
 COPY . .
 
-RUN npm run build --silent
-
 EXPOSE 8080
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "dev" ]
