@@ -1,0 +1,18 @@
+version: "3"
+services:
+  api:
+    container_name: devices-list-api
+    image: murilo9/devices-list-api
+    restart: always
+    build: .
+    ports:
+      - "8080:8080"
+    links:
+      - mongo
+  mongo:
+    container_name: devices-list-mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - '27017:27017'

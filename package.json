@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "rm -rf dist; tsc",
+    "build": "rm -rf dist && tsc",
     "start": "node dist",
     "test": "env-cmd -e test node_modules/.bin/mocha -r ts-node/register src/**/*.spec.ts --require babel-register"
   },
