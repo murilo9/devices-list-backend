@@ -1,5 +1,9 @@
 import DeviceType from "./types/DeviceType";
 
+/**
+ * This is a mock of some devices that'll be inserted into the database if they're not there yet.
+ */
+
 export default [
   {
     created: new Date(),

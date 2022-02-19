@@ -4,6 +4,9 @@ import getUserFromDb from "../db/getUserFromDb";
 import bcrypt from 'bcrypt'
 import PasswordOrUsernameIncorrectError from "../types/Errors/PasswordOrUsernameIncorrectError";
 
+/**
+ * Validates a Sign In request form.
+ */
 export default async function validateSignInForm(request: Request): Promise<void> {
   const { username, password } = request.body;
   // Verify if user exists
@@ -18,10 +21,8 @@ export default async function validateSignInForm(request: Request): Promise<void
   }
   const { hash } = userPassword;
   // Verify if password and hash match
-  console.log(password, hash)
   const match = await bcrypt.compare(password, hash);
   if (!match) {
-    console.log('no match', hash)
     throw new PasswordOrUsernameIncorrectError()
   }
 }

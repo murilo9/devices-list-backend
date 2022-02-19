@@ -7,6 +7,9 @@ import IAssertiveController from "../types/IAssertiveController";
 import User from "../types/User";
 import getPasswordHash from "../utils/getPasswordHash";
 
+/**
+ * Responsible for the Sign Up flow. Validates form data.
+ */
 export default class SignUpController extends Controller implements IAssertiveController {
   validator: (request: Request) => Promise<void>;
 

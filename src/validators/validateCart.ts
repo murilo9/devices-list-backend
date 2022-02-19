@@ -3,6 +3,9 @@ import getDevicesListFromDB from "../db/getDevicesListFromDb";
 import DeviceInCart from "../types/DeviceInCart";
 import MalformedCartError from "../types/Errors/MalformedCartError";
 
+/**
+ * Validates a cart update request form.
+ */
 export default async function validateCart(request: Request): Promise<void> {
   const { items } = request.body
   if (!items) {

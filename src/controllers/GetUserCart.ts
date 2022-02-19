@@ -4,6 +4,9 @@ import Controller from "../types/Controller"
 import DeviceInCart from "../types/DeviceInCart"
 import IRestrictAccessController from "../types/IRestricAccessController"
 
+/**
+ * Responsible for the Get User Cart flow. Verifies if user has access permission.
+ */
 export default class GetUserCartController extends Controller implements IRestrictAccessController {
   authorizator: (request: Request) => Promise<void>
 

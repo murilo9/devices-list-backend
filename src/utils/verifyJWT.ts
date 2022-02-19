@@ -2,6 +2,13 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
+/**
+ * Middleware function that verifies if x-access-token is valid.
+ * @param request 
+ * @param response 
+ * @param next 
+ * @returns 
+ */
 export default function verifyJWT(request: Request, response: Response, next: Function) {
   const token = request.headers['x-access-token'];
   if (!token) return response.status(401).json({ message: 'No token provided.' });

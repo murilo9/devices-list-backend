@@ -5,6 +5,11 @@ import IAssertiveController from '../types/IAssertiveController';
 import IRestrictAccessController from '../types/IRestricAccessController';
 import getErrorStatusCode from './getErrorStatusCode';
 
+/**
+ * Converts a Controller class into a function acceptable by Express.
+ * @param controller The controller class intance.
+ * @returns 
+ */
 export default function makeRoute(controller:
   | Controller
   | (Controller & IAssertiveController)
@@ -36,9 +41,7 @@ export default function makeRoute(controller:
       const flowResult = await controller.handle(request);
       response.status(200).send(flowResult);
     } catch (error) {
-      // Catches REALLY unexpected errors
-      console.log(error);
-      response.status(500).send(error);
+      response.status(getErrorStatusCode(error)).send(error.message);
     }
   }
 }

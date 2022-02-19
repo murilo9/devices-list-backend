@@ -4,6 +4,9 @@ import SignUpFormIncompleteError from "../types/Errors/SignUpFormIncomplete";
 import SignUpPasswordsNotMatchError from "../types/Errors/SignUpPasswordsNotMatch";
 import UsernameAlreadyRegisteredError from "../types/Errors/UsernameAlreadyRegisteredError";
 
+/**
+ * Validates a Sign Up request form.
+ */
 export default async function validateSignUpForm(request: Request): Promise<void> {
   const { username, password, passwordAgain } = request.body
   // Verify is all fields are present

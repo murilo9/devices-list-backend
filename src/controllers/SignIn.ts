@@ -6,6 +6,9 @@ import jwt from 'jsonwebtoken';
 import { Request } from "express";
 import SignInResponse from "../types/SignInResponse";
 
+/**
+ * Responsible for the Sign In flow. Validates form data.
+ */
 export default class SignInController extends Controller implements IAssertiveController {
   validator: (request: Request) => Promise<void>;
 

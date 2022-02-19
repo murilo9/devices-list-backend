@@ -29,7 +29,6 @@ export default class DevicesApp {
   }
 
   private loadRoutes(): void {
-    // load routes here
     this.app.get('/test', (req, res) => { res.send('Server works') })
     this.app.get('/devices', makeRoute(new GetDevicesListController()))
     this.app.post('/signup', makeRoute(new SignUpController(validateSignUpForm)))

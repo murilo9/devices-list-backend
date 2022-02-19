@@ -5,6 +5,10 @@ import Controller from "../types/Controller";
 import IAssertiveController from "../types/IAssertiveController";
 import IRestrictAccessController from "../types/IRestricAccessController";
 
+/**
+ * Responsible for the Save User Cart flow. Verifies if user has access permission.
+ * Also validates form data.
+ */
 export default class SaveCartController extends Controller implements IAssertiveController, IRestrictAccessController {
   authorizator: (request: Request) => Promise<void>
   validator: (request: Request) => Promise<void>

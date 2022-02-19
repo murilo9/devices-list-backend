@@ -35,5 +35,6 @@ export default function getErrorStatusCode(error: Error): number {
   if (error instanceof SignUpFormIncompleteError) {
     return 400
   }
+  // Default error status code is 500 (for REALLY unexpected errors, out of domain scope)
   return 500
 }
